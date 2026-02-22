@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loikov Project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; }
+        .logo-font { font-family: 'Orbitron', sans-serif; }
+        
+        .neon-cyan { text-shadow: 0 0 10px #67e8f9, 0 0 20px #22d3ee, 0 0 40px #06b6d4; }
+        .neon-pink { text-shadow: 0 0 10px #f472b6, 0 0 20px #ec4899, 0 0 40px #db2777; }
+        
+        .gallery-img {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .gallery-img:hover {
+            transform: scale(1.08) rotate(1deg);
+            box-shadow: 0 0 35px rgba(103, 232, 249, 0.6);
+        }
+        
+        .hero-bg {
+            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)), url('https://picsum.photos/id/1015/2000/1200') center/cover no-repeat;
+        }
+        
+        .active-filter {
+            background-color: rgb(103 232 249);
+            color: black;
+            border-color: rgb(103 232 249);
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-200">
+
+    <!-- NAVBAR -->
+    <nav class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-cyan-500/20">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-gradient-to-br from-cyan-400 to-pink-500 rounded-2xl flex items-center justify-center text-black font-bold text-3xl logo-font shadow-lg">L</div>
+                <div class="leading-none">
+                    <span class="text-3xl font-bold logo-font tracking-widest neon-cyan">LOIKOV</span>
+                    <span class="block text-xs tracking-[3px] text-cyan-400 -mt-1">PROJECT</span>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex gap-8 text-sm font-medium">
+                <a href="#gallery" class="hover:text-cyan-400 transition-colors">ГАЛЕРЕЯ</a>
+                <a href="#about" class="hover:text-cyan-400 transition-colors">О ПРОЕКТЕ</a>
+            </div>
+            
+            <a href="https://youtube.com/@loikov_project?si=P3Fyu2B-5YvpsJCD" target="_blank" class="px-6 py-3 bg-gradient-to-r from-cyan-500 to-pink-500 rounded-2xl font-semibold hover:scale-105 transition flex items-center gap-2">
+                <i class="fab fa-youtube"></i>
+                <span>YouTube</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero-bg min-h-screen flex items-center pt-20">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <h1 class="text-6xl md:text-8xl font-black logo-font tracking-tighter mb-4 neon-cyan">LOIKOV PROJECT</h1>
+            <p class="text-2xl md:text-3xl text-zinc-400 mb-12">Мои моменты из реальной жизни</p>
+            <button onclick="document.getElementById('gallery').scrollIntoView({behavior:'smooth'})" 
+                    class="px-12 py-6 text-xl font-bold bg-white text-black rounded-3xl hover:bg-cyan-400 hover:text-white transition-all">
+                ОТКРЫТЬ ГАЛЕРЕЮ
+            </button>
+        </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="gallery" class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-6xl font-bold logo-font neon-cyan">ГАЛЕРЕЯ</h2>
+            <p class="text-zinc-400 text-xl mt-3">Кликни на любое фото для увеличения</p>
+        </div>
+
+        <!-- Фильтры (все фото теперь IRL) -->
+        <div class="flex justify-center gap-3 mb-12">
+            <button onclick="filterGallery('all')" class="active-filter px-8 py-3 rounded-3xl text-sm font-semibold transition">ВСЕ</button>
+            <button onclick="filterGallery('irl')" class="px-8 py-3 bg-zinc-900 hover:bg-zinc-800 rounded-3xl text-sm font-semibold transition">IRL</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="gallery-grid"></div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="py-24 bg-black border-t border-b border-zinc-900">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-5xl font-bold logo-font neon-pink mb-8">О ПРОЕКТЕ</h2>
+            <p class="text-lg text-zinc-300 leading-relaxed">
+                Привет, я Абдулло (Loikov). Это моя личная фотогалерея — моменты из города, прогулок, дождливых дней и всего, что мне нравится снимать.
+            </p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-12 bg-black border-t border-zinc-900">
+        <div class="max-w-7xl mx-auto px-6 text-center text-zinc-500">
+            <p>© 2026 Loikov Project • Сделано с душой</p>
+        </div>
+    </footer>
+
+    <!-- LIGHTBOX -->
+    <div id="lightbox" class="hidden fixed inset-0 bg-black/95 z-[999] items-center justify-center p-4">
+        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-5xl text-white hover:text-cyan-400 transition">&times;</button>
+        <img id="lightbox-img" src="" class="max-h-[90vh] max-w-full rounded-3xl shadow-2xl" alt="">
+    </div>
+
+    <script>
+        const images = [
+            { url: "./images/1.jpg", category: "irl", title: "Поездка в автобусе" },
+            { url: "./images/2.jpg", category: "irl", title: "Современный квартал" },
+            { url: "./images/3.jpg", category: "irl", title: "Здание с колоннами" },
+            { url: "./images/4.jpg", category: "irl", title: "Парковая аллея" },
+            { url: "./images/5.jpg", category: "irl", title: "Танк-памятник ночью" },
+            { url: "./images/6.jpg", category: "irl", title: "Улица в зелени" },
+            { url: "./images/7.jpg", category: "irl", title: "Дождливый перекрёсток" },
+            { url: "./images/8.jpg", category: "irl", title: "Цветная корова" },
+            { url: "./images/9.jpg", category: "irl", title: "Панельки и кусты" }
+        ];
+
+        function renderGallery(filtered = images) {
+            const grid = document.getElementById('gallery-grid');
+            grid.innerHTML = '';
+            filtered.forEach(img => {
+                const card = document.createElement('div');
+                card.className = 'group relative overflow-hidden rounded-3xl cursor-pointer';
+                card.innerHTML = `
+                    <img src="${img.url}" class="gallery-img w-full aspect-video object-cover" alt="${img.title}">
+                    <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end p-6">
+                        <p class="text-lg font-medium">${img.title}</p>
+                    </div>
+                `;
+                card.onclick = () => openLightbox(img.url);
+                grid.appendChild(card);
+            });
+        }
+
+        function filterGallery(cat) {
+            document.querySelectorAll('#filters button').forEach(b => b.classList.remove('active-filter'));
+            event.currentTarget.classList.add('active-filter');
+
+            if (cat === 'all') renderGallery(images);
+            else renderGallery(images.filter(i => i.category === cat));
+        }
+
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.remove('hidden');
+            document.getElementById('lightbox').classList.add('flex');
+        }
+
+        function closeLightbox() {
+            const lb = document.getElementById('lightbox');
+            lb.classList.add('hidden');
+            lb.classList.remove('flex');
+        }
+
+        window.onload = () => {
+            renderGallery();
+            document.getElementById('lightbox').addEventListener('click', e => {
+                if (e.target.id === 'lightbox') closeLightbox();
+            });
+        };
+    </script>
+</body>
+</html>
